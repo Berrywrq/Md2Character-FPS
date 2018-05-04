@@ -1,0 +1,7 @@
+{
+  "globalDependencies": {
+    "cannon": "registry:dt/cannon#0.1.0+20170123234549",
+    "jquery": "registry:dt/jquery#1.10.0+20170310222111",
+    "three": "registry:dt/three#0.84.0+20170323144537"
+  }
+}
