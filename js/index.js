@@ -36,16 +36,15 @@ function initCannon() {
 
     // 创建一个光滑的材质
     physicsMaterial = new CANNON.Material("physicsMaterial");
-    // physicsMaterial.friction=1.0;
-    // physicsMaterial.restitution=0.3;
     var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
         physicsMaterial,
         0.0, // 摩擦系数:设置没有效果
         0.3 // 补偿
     );
-    // physicsContactMaterial.friction=1.0;
+    physicsContactMaterial.friction = 0.6;
     // 添加到世界中
     world.addContactMaterial(physicsContactMaterial);
+
 
     // 创建一个球体(人物)
     var mass = 5,
@@ -56,7 +55,7 @@ function initCannon() {
         material: physicsMaterial
     });
     sphereBody.addShape(sphereShape);
-    sphereBody.position.set(-8, 6, 8);
+    sphereBody.position.set(-20, 1, 20);
     sphereBody.linearDamping = 0.9;
     world.add(sphereBody);
 
@@ -86,12 +85,13 @@ function checkBoxCollide(x, z, boxCenterPoints) {
     //计算这个点到所有点的距离是否<=2
     for (var k = 0; k < boxCenterPoints.length; k++) {
         pTemp = boxCenterPoints[k];
-        if (Math.pow(Math.pow(x - pTemp.X, 2) + Math.pow(z - pTemp.Z, 2), 0.5) <= 3) {
+        if (Math.pow(Math.pow(x - pTemp.X, 2) + Math.pow(z - pTemp.Z, 2), 0.5) <= 3.6) {
             return false;
         }
     }
     return true;
 }
+
 function init() {
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -99,7 +99,7 @@ function init() {
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x000000, 0, 500);
 
-    var ambient = new THREE.AmbientLight(0x111111);
+    var ambient = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambient);
 
     light = new THREE.SpotLight(0xffffff);
@@ -119,6 +119,7 @@ function init() {
 
         //light.shadowCameraVisible = true;
     }
+
     scene.add(light);
 
 
@@ -196,12 +197,6 @@ function onWindowResize() {
 }
 
 var dt = 1 / 500;   //游戏world的step值
-var tempQuaternion = new THREE.Quaternion();
-function disappear(o) {
-    return function () {
-        scene.remove(o.ratamahatta.character.root);
-    }
-};
 function animate() {
     requestAnimationFrame(animate);
     if (controls.enabled) {
@@ -232,13 +227,16 @@ function animate() {
             }
             else {
                 //敌人已死
+                world.removeBody(ratamahattaObj.ratamahattaBody);
                 if (ratamahattaObj.ratamahatta.character.meshBody.activeAction.time < 0.25) {
                     ratamahattaObj.ratamahatta.character.update(delta);
                 }
-                else {
-                    world.removeBody(ratamahattaObj.ratamahattaBody);
+                else {  //死亡动画已完成
                     //一定时间后消失
-                    setTimeout(disappear(ratamahattaObj), 1000);
+                    var o = ratamahattaObj;
+                    setTimeout(function () {
+                        scene.remove(o.ratamahatta.character.root);
+                    }, 1000);
                     needPopObjs.push(ratamahattaObj);
                     currEnemyCount++;
                     $("#killed").text(currEnemyCount);
@@ -254,7 +252,7 @@ function animate() {
     }
 
     controls.update(Date.now() - time);
-    //cannonDebugRenderer.update();
+    cannonDebugRenderer.update();
     renderer.render(scene, camera);
     time = Date.now();
 
@@ -549,9 +547,6 @@ var PointerLockControls = function (camera, cannonBody) {
 
 var ballShape = new CANNON.Sphere(0.01);
 var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 8, 8);
-// var halfExtents = new CANNON.Vec3(1, 1, 1);
-// var ballShape = new CANNON.Box(halfExtents);
-// var ballGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
 var shootDirection = new THREE.Vector3();
 var shootVelo = 300;//子弹速度
 var projector = new THREE.Projector();
@@ -588,8 +583,8 @@ window.addEventListener("mousedown", function (e) {
             var ballMesh = new THREE.Mesh(ballGeometry, material2);
             world.add(ballBody);
             scene.add(ballMesh);
-            ballMesh.castShadow = true;
-            ballMesh.receiveShadow = true;
+            ballMesh.castShadow = false;
+            ballMesh.receiveShadow = false;
             balls.push(ballBody);
             ballMeshes.push(ballMesh);
             getShootDir(shootDirection);
@@ -630,35 +625,23 @@ function Ratamahatta(x, y, z) {
     this.z = z;
     this.init = function () {
         this.ratamahatta.character.scale = 0.02;
-        this.ratamahatta.character.onLoadComplete = function (obj) {
+        var obj = this; //保存对象引用
+        this.ratamahatta.character.onLoadComplete = function () {
             obj.ratamahatta.character.root.position.set(obj.x, obj.y, obj.z);
             scene.add(obj.ratamahatta.character.root);
-            return function () {
-                // var verts = [], faces = [], temp;
-                // for (var i = 0; i < ratamahatta.character.meshBody.geometry.vertices.length; i++) {
-                //     temp = ratamahatta.character.meshBody.geometry.vertices[i];
-                //     verts.push(new CANNON.Vec3(-temp.z * 0.02, temp.y * 0.02, temp.x * 0.02));
-                // }
-                // for (var i = 0; i < ratamahatta.character.meshBody.geometry.faces.length; i++) {
-                //     temp = ratamahatta.character.meshBody.geometry.faces[i];
-                //     faces.push([temp.a, temp.b, temp.c]);
-                // }
-                // ratamahattaShape = new CANNON.ConvexPolyhedron(verts, faces);
-                obj.ratamahattaBody.addShape(ratamahattaShape);
-                world.addBody(obj.ratamahattaBody);
-                obj.ratamahattaBody.position.set(obj.x, obj.y, obj.z);
-                obj.ratamahattaBody.addEventListener("collide", function (e) {
-                    if (e.body.shapes[0].id == ballShape.id) {
-                        obj.ratamahatta.setAnimationName("crdeath");
-
-                        //world.removeBody(e.body);
-                    }
-                });
-                obj.ratamahatta.setAnimationName("run");
-                obj.ratamahatta.setWeaponName("w_shotgun");
-                console.log("ratamahattaBody was added");
-            };
-        }(this);
+            obj.ratamahattaBody.addShape(ratamahattaShape);
+            world.addBody(obj.ratamahattaBody);
+            obj.ratamahattaBody.position.set(obj.x, obj.y, obj.z);
+            obj.ratamahattaBody.addEventListener("collide", function (e) {
+                if (e.body.shapes[0].id == ballShape.id) {
+                    obj.ratamahatta.setAnimationName("crdeath");
+                }
+                console.log(e.body);
+            });
+            obj.ratamahatta.setAnimationName("stand");
+            obj.ratamahatta.setWeaponName("w_shotgun");
+            console.log("ratamahattaBody was added");
+        };
     };
 };
 var ratamahattas = [];
@@ -666,12 +649,10 @@ function createRatamahatta() {
     var x, y, z;
     do {
         x = (Math.random() - 0.5) * 30;
-        //var y = 1 + (Math.random() - 0.5) * 1;
         y = 0.48;
         z = (Math.random() - 0.5) * 30;
-        //检测碰撞
     }
-    while (!checkBoxCollide(x, z, boxCenterPoints));
+    while (!checkBoxCollide(x, z, boxCenterPoints));//检测碰撞
     var obj = new Ratamahatta(x, y, z);
     obj.init();
     return obj;
@@ -688,4 +669,3 @@ initCannon();
 init();
 animate();
 initEnemy();
-console.log("complete");
