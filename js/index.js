@@ -1,6 +1,4 @@
 /// <reference path="../typings/index.d.ts" />
-/// <reference path="./libs/threex/threex.md2character.js" />
-/// <reference path="./libs/threex/threex.md2characterratmahatta.js" />
 
 var clock = new THREE.Clock();
 
