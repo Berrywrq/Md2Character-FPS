@@ -1,4 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
+/// <reference path="./initThree.js" />
 
 var enemyCount = 10;
 var currEnemyCount = 0;
@@ -13,8 +13,10 @@ function Ratamahatta(x, y, z) {
         this.ratamahatta.character.scale = 0.02;
         var obj = this; //保存对象引用
         this.ratamahatta.character.onLoadComplete = function () {
+
             obj.ratamahatta.character.root.position.set(obj.x, obj.y, obj.z);
             scene.add(obj.ratamahatta.character.root);
+
             obj.ratamahattaBody.addShape(ratamahattaShape);
             world.addBody(obj.ratamahattaBody);
             obj.ratamahattaBody.position.set(obj.x, obj.y, obj.z);
@@ -22,14 +24,15 @@ function Ratamahatta(x, y, z) {
                 if (e.body.shapes[0].id == ballShape.id) {
                     obj.ratamahatta.setAnimationName("crdeath");
                 }
-                //console.log(e.body);
             });
+
+            //初始动画
             obj.ratamahatta.setAnimationName("stand");
             obj.ratamahatta.setWeaponName("w_shotgun");
-            // console.log("ratamahattaBody was added");
         };
     };
 };
+
 var ratamahattas = [];
 function createRatamahatta() {
     var x, y, z;
@@ -43,6 +46,7 @@ function createRatamahatta() {
     obj.init();
     return obj;
 }
+
 function initEnemy() {
     for (var j = 0; j < enemyCount; j++) {
         ratamahattas.push(createRatamahatta());

@@ -1,4 +1,5 @@
 /// <reference path="../typings/index.d.ts" />
+/// <reference path="./initDomControls.js" />
 
 var dt = 1 / 500;   //游戏world的step值
 function animate() {

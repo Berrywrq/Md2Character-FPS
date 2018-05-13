@@ -1,4 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
+/// <reference path="./initBullet.js" />
+/// <reference path="./initEnemy.js" />
+
 
 var blocker = document.getElementById('blocker');
 var instructions = document.getElementById('instructions');
@@ -156,7 +159,6 @@ var PointerLockControls = function (camera, cannonBody) {
             if (canJump === true) {//在地面
                 cannonBody.velocity.x = 0;
                 cannonBody.velocity.z = 0;
-                console.log("static")
             }
         }
         switch (event.keyCode) {
@@ -225,7 +227,7 @@ var PointerLockControls = function (camera, cannonBody) {
         euler.x = pitchObject.rotation.x;
         euler.y = yawObject.rotation.y;
         euler.order = "XYZ";
-        deltaVelocity.applyEuler(euler);
+        deltaVelocity.applyEuler(euler);//运动方向对准
 
         cannonBody.velocity.x += deltaVelocity.x;
         cannonBody.velocity.z += deltaVelocity.z;

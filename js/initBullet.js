@@ -1,3 +1,4 @@
+/// <reference path="./initThree.js" />
 
 var ballShape = new CANNON.Sphere(0.01);
 var ballGeometry = new THREE.SphereGeometry(ballShape.radius, 8, 8);

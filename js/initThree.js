@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 /// <reference path="./initCannon.js" />
 
 var camera, scene, renderer;
