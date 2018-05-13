@@ -80,17 +80,30 @@
             <span id="total">10</span>
         </p>
     </div>
-
+    <!-- infrastructed js -->
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.js'></script>
     <script src='js/libs/lodash.min.js'></script>
+    <!-- three.js extensions -->
     <script src="js/libs/threex/Projector.js"></script>
     <script src="js/libs/threex/CannonDebugRenderer.js"></script>
     <script src="js/libs/threex/Md2loader.js"></script>
     <script src="js/libs/threex/Md2character.js"></script>
     <script src="js/libs/threex/Md2characterControls.js"></script>
     <script src="js/libs/threex/Md2characterRatmahatta.js"></script>
-    <script src="js/index.js"></script>
+    <!-- main js -->
+    <script src="js/initCannon.js"></script>
+    <script src="js/initThree.js"></script>
+    <script src="js/initBullet.js"></script>
+    <script src="js/initEnemy.js"></script>
+    <script src="js/initDomControls.js"></script>
+    <script src="js/animate.js"></script>
+    <script>
+        initCannon();
+        initThree();
+        animate();
+        initEnemy();
+    </script>
 
 </body>
 
