@@ -69,7 +69,7 @@ if (havePointerLock) {
 /**注册鼠标无限滚动状态下的用户交互
  * 
  * @param {THREE.Camera} camera 相机
- * @param {Body} cannonBody 用户body
+ * @param {Body} cannonBody 人物body
  */
 var PointerLockControls = function (camera, cannonBody) {
 

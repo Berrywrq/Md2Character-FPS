@@ -7,7 +7,7 @@ var boxCenterPoints = []; //已加入场景的中心圆点位置
 
 var clock = new THREE.Clock();
 
-//检测位置是否合理
+//检测盒子位置是否合理
 function checkBoxCollide(x, z, boxCenterPoints) {
     var pTemp;
     //计算这个点到所有点的距离是否<=2
@@ -22,11 +22,12 @@ function checkBoxCollide(x, z, boxCenterPoints) {
 
 function initThree() {
 
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(70
+        , window.innerWidth / window.innerHeight, 0.1, 1000);
 
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x000000, 0, 500);
-
+    
+    //设置光照
     var ambient = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambient);
 
@@ -47,32 +48,31 @@ function initThree() {
 
         //light.shadowCameraVisible = true;
     }
-
     scene.add(light);
 
+    //设置鼠标无限滚动的控制方式
     controls = new PointerLockControls(camera, sphereBody);
-    scene.add(controls.getObject());
+    scene.add(controls.getObject());//将相机包装器加入场景
 
-    // 地板
+    //地板
     geometry = new THREE.PlaneGeometry(300, 300, 50, 50);
     geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
     material = new THREE.MeshLambertMaterial({
         color: 0xeeee00
     });
-
     mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     scene.add(mesh);
 
+    //渲染器
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
     renderer.shadowMap.enabled = true;
     renderer.shadowMapSoft = true;
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(scene.fog.color, 1);
 
     document.body.appendChild(renderer.domElement);
 
@@ -84,7 +84,6 @@ function initThree() {
     var boxGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
     for (var i = 0; i < 100; i++) {
         var x = (Math.random() - 0.5) * 30;
-        //var y = 1 + (Math.random() - 0.5) * 1;
         var y = 1;
         var z = (Math.random() - 0.5) * 30;
         //检测碰撞

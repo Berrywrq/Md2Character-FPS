@@ -29,20 +29,20 @@ function initCannon() {
     world.gravity.set(0, -100, 0);
     world.broadphase = new CANNON.NaiveBroadphase();
 
-    // 创建一个光滑的材质
+    // 创建一个物理材质
     physicsMaterial = new CANNON.Material("physicsMaterial");
     var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
         physicsMaterial,
-        0.0, // 摩擦系数:设置没有效果
-        0.3 // 补偿
+        0.0,
+        0.3 
     );
-    physicsContactMaterial.friction = 0.6;
-    // 添加到世界中
+    physicsContactMaterial.friction = 0.6; // 摩擦系数
+    // 添加到世界中作通用材质
     world.addContactMaterial(physicsContactMaterial);
 
 
-    // 创建一个球体(人物)
-    var mass = 5,
+    // 创建一个人物（用球体包装）
+    var mass = 5,   //质量
         radius = 0.5;
     sphereShape = new CANNON.Sphere(radius);
     sphereBody = new CANNON.Body({
