@@ -11,8 +11,7 @@ function getShootDir(targetVec) {
     var vector = targetVec;
     targetVec.set(0, 0, 1);
     vector.unproject(camera);
-    var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
-    targetVec.copy(ray.direction);
+    targetVec.copy(vector.sub(sphereBody.position).normalize());//规格化
 }
 
 var shooting = false;

@@ -26,7 +26,7 @@ function initThree() {
         , window.innerWidth / window.innerHeight, 0.1, 1000);
 
     scene = new THREE.Scene();
-    
+
     //设置光照
     var ambient = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambient);
@@ -34,20 +34,7 @@ function initThree() {
     light = new THREE.SpotLight(0xffffff);
     light.position.set(10, 30, 20);
     light.target.position.set(0, 0, 0);
-    if (true) {
-        light.castShadow = true;
-
-        light.shadow.camera.near = 20;
-        light.shadow.camera.far = 50; //camera.far;
-        light.shadow.camera.fov = 40;
-
-        light.shadowMapBias = 0.1;
-        light.shadowMapDarkness = 0.7;
-        light.shadow.mapSize.width = 2 * 512;
-        light.shadow.mapSize.height = 2 * 512;
-
-        //light.shadowCameraVisible = true;
-    }
+    light.castShadow = true;
     scene.add(light);
 
     //设置鼠标无限滚动的控制方式
